@@ -24,11 +24,11 @@ public class Main {
                 }
                 break;
             } catch (InputMismatchException e) {
-                System.out.println("Podaj poprawna liczbe");
+                System.out.println("Musisz wprowadzić liczbe");
                 var.next();
             } catch (IllegalArgumentException e) {
-                System.out.println(e.toString());
-                System.out.print("Podaj poprawną liczbę");
+                System.out.println(e.toString() + " \nPodaj poprawną liczbę");
+                //System.out.print("Podaj poprawną liczbę");
             }
         }
 
@@ -41,16 +41,27 @@ public class Main {
             konto[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
             konto[i].depositInfo();
         }
-        int from = rand.nextInt(ileKont),
-                to = rand.nextInt(ileKont),
-                ile = rand.nextInt(10);
+        int from, to, ile;
 
         System.out.println("Stan przed przelewem:");
         mikBank.showKasa();
-        System.out.println(String.format("Przelew %d zl z konta %s na konto %s", ile, konto[from].nrKonta, konto[to].nrKonta));
-        mikBank.transfer(konto[from], konto[to], ile);
-        konto[from].depositInfo();
-        konto[to].depositInfo();
+
+        for (int i = 0; i < ileKont; i++) {
+            from = rand.nextInt(ileKont);
+            to = rand.nextInt(ileKont);
+            while (true) {
+                try {
+                    ile = rand.nextInt(100);
+                    System.out.println(String.format("Przelew %d zl z konta %s na konto %s", ile, konto[from].nrKonta, konto[to].nrKonta));
+                    mikBank.transfer(konto[from], konto[to], ile);
+                    break;
+                } catch (IllegalArgumentException | IllegalStateException e) {
+                    System.out.print(e.toString());
+                }
+                konto[from].depositInfo();
+                konto[to].depositInfo();
+            }
+        }
         System.out.println("Stan po przelewie");
         mikBank.showKasa();
     }

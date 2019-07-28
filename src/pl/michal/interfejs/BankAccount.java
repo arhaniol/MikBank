@@ -39,7 +39,7 @@ public class BankAccount implements Account {
     }
 
     @Override
-    public void depositInfo(){
-        System.out.println(String.format("Na koncie: %s jest %d zl",nrKonta,stanKonta));
+    public void depositInfo() {
+        System.out.println(String.format("Na koncie: %s jest %d zl", nrKonta, stanKonta));
     }
 }

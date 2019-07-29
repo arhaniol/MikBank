@@ -11,58 +11,57 @@ public class Main {
 
     public static void main(String[] args) {
         // write your code here
-        BankAccount[] konto;
+        BankAccount[] bankAccounts;
         Random rand = new Random();
         Scanner var = new Scanner(System.in);
-        System.out.print("Podaj ile kont chcesz wygenerowac: ");
-        int ileKont;
+        System.out.print("Enter how many account you want to generate: ");
+        int noAccout;
         while (true) {
             try {
-                ileKont = var.nextInt();
-                if (ileKont <= 0) {
-                    throw new IllegalArgumentException("Liczba kont musi być większa od 0");
+                noAccout = var.nextInt();
+                if (noAccout <= 0) {
+                    throw new IllegalArgumentException("The number of account must be greater then 0");
                 }
                 break;
             } catch (InputMismatchException e) {
-                System.out.println("Musisz wprowadzić liczbe");
+                System.out.println("You must enter a number");
                 var.next();
             } catch (IllegalArgumentException e) {
-                System.out.println(e.toString() + " \nPodaj poprawną liczbę");
-                //System.out.print("Podaj poprawną liczbę");
+                System.out.println(e.toString() + " \nEnter correct number");
             }
         }
 
-        konto = new BankAccount[ileKont];
+        bankAccounts = new BankAccount[noAccout];
 
         Bank mikBank = new Bank();
 
-        for (int i = 0; i < konto.length; i++) {
-            konto[i] = new BankAccount();
-            konto[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
-            konto[i].depositInfo();
+        for (int i = 0; i < bankAccounts.length; i++) {
+            bankAccounts[i] = new BankAccount();
+            bankAccounts[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
+            bankAccounts[i].depositInfo();
         }
-        int from, to, ile;
+        int from, to, amount;
 
-        System.out.println("Stan przed przelewem:");
-        mikBank.showKasa();
+        System.out.println("Account balance before transactions:");
+        mikBank.printBankBalance();
 
-        for (int i = 0; i < ileKont; i++) {
-            from = rand.nextInt(ileKont);
-            to = rand.nextInt(ileKont);
+        for (int i = 0; i < noAccout; i++) {
+            from = rand.nextInt(noAccout);
+            to = rand.nextInt(noAccout);
             while (true) {
                 try {
-                    ile = rand.nextInt(100);
-                    System.out.println(String.format("Przelew %d zl z konta %s na konto %s", ile, konto[from].nrKonta, konto[to].nrKonta));
-                    mikBank.transfer(konto[from], konto[to], ile);
+                    amount = rand.nextInt(100);
+                    System.out.println(String.format("Transfer %d zl from %s account to %s account", amount, bankAccounts[from].accountNO, bankAccounts[to].accountNO));
+                    mikBank.transfer(bankAccounts[from], bankAccounts[to], amount);
                     break;
                 } catch (IllegalArgumentException | IllegalStateException e) {
                     System.out.print(e.toString());
                 }
-                konto[from].depositInfo();
-                konto[to].depositInfo();
+                bankAccounts[from].depositInfo();
+                bankAccounts[to].depositInfo();
             }
         }
-        System.out.println("Stan po przelewie");
-        mikBank.showKasa();
+        System.out.println("Account balance after all transactions");
+        mikBank.printBankBalance();
     }
 }

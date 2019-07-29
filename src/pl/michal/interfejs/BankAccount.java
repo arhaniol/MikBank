@@ -1,45 +1,45 @@
 package pl.michal.interfejs;
 
 public class BankAccount implements Account {
-    private int stanKonta;
-    public String nrKonta;
-    private static int nrPorzadkowy = 1;
+    private int accountBalance;
+    public String accountNO;
+    private static int orderNO = 1;
 
     @Override
     public void deposit(int amount) {
         if (amount > 0)
-            stanKonta += amount;
+            accountBalance += amount;
         else
-            throw new IllegalArgumentException("Kwota musi byc wieksza od 0!!!");
+            throw new IllegalArgumentException("The amount must be greater than 0!!!");
     }
 
     @Override
     public void withdraw(int amount) {
         if (amount > 0) {
-            if (amount <= stanKonta)
-                stanKonta -= amount;
+            if (amount <= accountBalance)
+                accountBalance -= amount;
             else
-                throw new IllegalStateException("Brak srodkow na koncie");
+                throw new IllegalStateException("Lack of account funds");
         } else
-            throw new IllegalArgumentException("Kwota musi byc wieksza od 0!!!");
+            throw new IllegalArgumentException("The amount must be greater than 0!!!");
     }
 
     public BankAccount() {
-        stanKonta = 0;
-        GenerujNumerKonta();
+        accountBalance = 0;
+        GenerateAccountNO();
     }
 
-    public BankAccount(int stanKonta) {
-        this.stanKonta = stanKonta;
-        GenerujNumerKonta();
+    public BankAccount(int amount) {
+        this.accountBalance = amount;
+        GenerateAccountNO();
     }
 
-    private void GenerujNumerKonta() {
-        nrKonta = String.format("0000 %d", nrPorzadkowy++);
+    private void GenerateAccountNO() {
+        accountNO = String.format("0000 %d", orderNO++);
     }
 
     @Override
     public void depositInfo() {
-        System.out.println(String.format("Na koncie: %s jest %d zl", nrKonta, stanKonta));
+        System.out.println(String.format("There is %d zł on account %s", accountBalance, accountNO));
     }
 }

@@ -9,12 +9,21 @@ public class Bank implements BankTransfer {
     private final int FEE;
     private MySQLaccess mySQLaccess;
 
+    /**
+     *  Creating the BANK
+     */
     public Bank() {
         account = 0;
         FEE = 1;
         mySQLaccess = new MySQLaccess();
     }
 
+    /**
+     * Transfer of money from one account to another
+     * @param from BankAccount
+     * @param to BankAccount
+     * @param amount fo money (int) to transfer
+     */
     @Override
     public void transfer(BankAccount from, BankAccount to, int amount) {
         if (amount <= 0) {
@@ -25,6 +34,12 @@ public class Bank implements BankTransfer {
         account += FEE;
     }
 
+    /**
+     * Transfer of money from one account to another
+     * @param from BankAccount
+     * @param to BankAccount
+     * @param amount of money (double) to transfer
+     */
     public void transfer(BankAccount from, BankAccount to, double amount) {
         if (amount <= 0) {
             this.transfer(from, to, 0);
@@ -37,8 +52,8 @@ public class Bank implements BankTransfer {
             try {
                 from.withdraw(amount + FEE);
 
-                mySQLaccess.InsertBankTransaction(fromNO, toNO, amount, FEE);
-                mySQLaccess.FinishTransaction();
+                mySQLaccess.insertBankTransaction(fromNO, toNO, amount, FEE);
+                mySQLaccess.finishTransaction();
             } catch (Exception e) {
                 throw new IllegalStateException("Transfer Error: " + e.toString());
             }
@@ -46,11 +61,18 @@ public class Bank implements BankTransfer {
         }
     }
 
+    /**
+     * Printing of current account balance
+     */
     public void printBankBalance() {
         System.out.println(String.format("Bank account: %d zl", account));
     }
 
-    public void Finish() throws Exception {
-        mySQLaccess.CloseDB();
+    /**
+     * Closing all connections
+     * @throws Exception
+     */
+    public void finish() throws Exception {
+        mySQLaccess.closeDB();
     }
 }

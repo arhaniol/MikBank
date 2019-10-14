@@ -5,6 +5,10 @@ import java.util.Random;
 public class BankAccount implements Account {
     private double accountBalance;
 
+    /**
+     *
+     * @return number of account
+     */
     public int getAccountNO() {
         return accountNO;
     }
@@ -14,6 +18,10 @@ public class BankAccount implements Account {
     private static MySQLaccess mySQLaccess = new MySQLaccess();
     private static Random rand = new Random();
 
+    /**
+     * Function add amount of money to current account
+     * @param amount of money (int)
+     */
     @Override
     public void deposit(int amount) {
         if (amount > 0)
@@ -22,6 +30,10 @@ public class BankAccount implements Account {
             throw new IllegalArgumentException("The amount must be greater than 0!!!\n");
     }
 
+    /**
+     * Function subtract amount of money from current account
+     * @param amount of money
+     */
     @Override
     public void withdraw(int amount) {
         if (amount > 0) {
@@ -33,10 +45,15 @@ public class BankAccount implements Account {
             throw new IllegalArgumentException("The amount must be greater than 0!!!\n");
     }
 
+    /**
+     * Function subtract amount of money from current account
+     * @param amount money
+     * @throws Exception
+     */
     public void withdraw(double amount) throws Exception {
         if (amount > 0) {
             try {
-                double accB = mySQLaccess.GetAccountInfo(accountNO);
+                double accB = mySQLaccess.getAccountInfo(accountNO);
                 if ((accB - amount) < 0) {
                     throw new IllegalStateException("Lack of account founds!\n");
                 }
@@ -46,8 +63,11 @@ public class BankAccount implements Account {
         }
     }
 
+    /**
+     * Creating new bank account with full of random personal data
+     */
     public BankAccount() {
-        GenerateAccountNO();
+        generateAccountNO();
 
         accountBalance = rand.nextDouble() * 100;
         String name = String.format("%c", rand.nextInt(24) + 65);
@@ -55,35 +75,49 @@ public class BankAccount implements Account {
         String eMail = String.format("%s.%s@com.pl", name, lastName);
         String city = String.format("%S%s%S%s%s%s", name, name, name, lastName, lastName, lastName);
         try {
-            mySQLaccess.InsertClientData(accountNO, name, lastName, city, eMail);
-            mySQLaccess.InsertAccountData(accountNO, accountBalance, 10);
-            mySQLaccess.InsertBankTransaction(accountNO, accountNO, accountBalance, 0);
-            mySQLaccess.FinishTransaction();
+            mySQLaccess.insertClientData(accountNO, name, lastName, city, eMail);
+            mySQLaccess.insertAccountData(accountNO, accountBalance, 10);
+            mySQLaccess.insertBankTransaction(accountNO, accountNO, accountBalance, 0);
+            mySQLaccess.finishTransaction();
         } catch (Exception e) {
             System.out.println(e.toString());
         }
     }
 
+    /**
+     *  Creating new bank account with initial deposit value
+     * @param amount
+     */
     public BankAccount(int amount) {
         this.accountBalance = amount;
-        GenerateAccountNO();
+        generateAccountNO();
     }
 
-    private void GenerateAccountNO() {
+    /**
+     *  Generating account number
+     */
+    private void generateAccountNO() {
 //        accountNO = String.format("0000 %d", orderNO++);
         accountNO = orderNO++;
     }
 
+    /**
+     * Printing account info
+     */
     @Override
     public void depositInfo() {
         try {
-            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.GetAccountInfo(accountNO), accountNO));
+            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
         } catch (Exception e) {
             System.out.println("Problem to get Deposit Info\n");
         }
     }
 
+    /**
+     * Closing data base connections
+     * @throws Exception
+     */
     public void Finish() throws Exception {
-        mySQLaccess.CloseDB();
+        mySQLaccess.closeDB();
     }
 }

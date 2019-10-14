@@ -15,11 +15,11 @@ public class Main {
         Random rand = new Random();
         Scanner var = new Scanner(System.in);
         System.out.print("Enter how many account you want to generate: ");
-        int noAccout;
+        int noAccount;
         while (true) {
             try {
-                noAccout = var.nextInt();
-                if (noAccout <= 0) {
+                noAccount = var.nextInt();
+                if (noAccount <= 0) {
                     throw new IllegalArgumentException("The number of account must be greater then 0");
                 }
                 break;
@@ -31,27 +31,30 @@ public class Main {
             }
         }
 
-        bankAccounts = new BankAccount[noAccout];
+        bankAccounts = new BankAccount[noAccount];
 
         Bank mikBank = new Bank();
 
         for (int i = 0; i < bankAccounts.length; i++) {
             bankAccounts[i] = new BankAccount();
-            bankAccounts[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
+//            bankAccounts[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
             bankAccounts[i].depositInfo();
         }
-        int from, to, amount;
+        int from, to;
+        double amount;
 
         System.out.println("Account balance before transactions:");
         mikBank.printBankBalance();
 
-        for (int i = 0; i < noAccout; i++) {
-            from = rand.nextInt(noAccout);
-            to = rand.nextInt(noAccout);
+        for (int i = 0; i < noAccount; i++) {
+            do {
+                from = rand.nextInt(noAccount);
+                to = rand.nextInt(noAccount);
+            } while (from == to);
+
             while (true) {
                 try {
-                    amount = rand.nextInt(100);
-                    System.out.println(String.format("Transfer %d zl from %s account to %s account", amount, bankAccounts[from].accountNO, bankAccounts[to].accountNO));
+                    amount = rand.nextDouble() * 100;
                     mikBank.transfer(bankAccounts[from], bankAccounts[to], amount);
                     break;
                 } catch (IllegalArgumentException | IllegalStateException e) {
@@ -63,5 +66,17 @@ public class Main {
         }
         System.out.println("Account balance after all transactions");
         mikBank.printBankBalance();
+        try {
+            mikBank.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < bankAccounts.length; i++) {
+            try {
+                bankAccounts[i].Finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

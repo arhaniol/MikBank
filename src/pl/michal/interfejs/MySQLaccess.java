@@ -11,16 +11,24 @@ public class MySQLaccess {
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
+    /**
+     * default constructor
+     */
     public MySQLaccess() {
         try {
-            this.CreateConnection("db.properties");
+            createConnection("db.properties");
         } catch (Exception e) {
             System.out.println("MySQL connecting problem!\n");
             e.printStackTrace();
         }
     }
 
-    private void CreateConnection(String dbProperties) throws Exception {
+    /**
+     *
+     * @param dbProperties patch to the properties file
+     * @throws Exception
+     */
+    private void createConnection(String dbProperties) throws Exception {
         try (FileInputStream f = new FileInputStream(dbProperties)) {
             //load properties from file
             Properties properties = new Properties();
@@ -37,7 +45,16 @@ public class MySQLaccess {
         }
     }
 
-    public void InsertClientData(int accoutNO, String firstName, String lastName, String city, String eMail) throws Exception {
+    /**
+     * this method insert all date of client account
+     * @param accoutNO account number
+     * @param firstName first name of account owner
+     * @param lastName last name of account owner
+     * @param city city of account owner
+     * @param eMail eMail of account owner
+     * @throws Exception
+     */
+    public void insertClientData(int accoutNO, String firstName, String lastName, String city, String eMail) throws Exception {
         if (accoutNO <= 0 || firstName == null || lastName == null || city == null) {
             throw new IllegalArgumentException("No data passed!");
         }
@@ -70,14 +87,21 @@ public class MySQLaccess {
         }
     }
 
-    public void InsertAccountData(int accountNO, double accountBalance, int accountLimit) throws Exception {
+    /**
+     * this method set balance and limit of given account
+     * @param accountNO account number
+     * @param accountBalance account balance
+     * @param accountLimit account limit
+     * @throws Exception
+     */
+    public void insertAccountData(int accountNO, double accountBalance, int accountLimit) throws Exception {
         //Columns:
         //accountNumber int(11) UN zerofill PK
         //accountBalance double
         //creditLimit int(4)
         //banktransaction_transactionID int
         if (accountNO <= 0) {
-            throw new IllegalArgumentException("No passed Account Noumber");
+            throw new IllegalArgumentException("No passed Account Number");
         }
         if (Math.abs(0 - accountBalance) < 0.0001)
             accountBalance = 0.0;
@@ -101,7 +125,11 @@ public class MySQLaccess {
         }
     }
 
-    public void FinishTransaction() throws Exception {
+    /**
+     * this method commit transaction
+     * @throws Exception
+     */
+    public void finishTransaction() throws Exception {
         try {
             if (connection != null)
                 connection.commit();
@@ -110,7 +138,11 @@ public class MySQLaccess {
         }
     }
 
-    public void CloseDB() throws Exception {
+    /**
+     * this method close connection
+     * @throws Exception
+     */
+    public void closeDB() throws Exception {
         try {
             if (resultSet != null)
                 resultSet.close();
@@ -125,7 +157,13 @@ public class MySQLaccess {
         }
     }
 
-    public double GetAccountInfo(int accountNO) throws Exception {
+    /**
+     * this method return balance of given account
+     * @param accountNO account number
+     * @return balance of account
+     * @throws Exception
+     */
+    public double getAccountInfo(int accountNO) throws Exception {
         if (accountNO <= 0) {
             throw new IllegalArgumentException("No passed Account number");
         }
@@ -143,7 +181,14 @@ public class MySQLaccess {
         }
     }
 
-    public void UpdateAccountData(int accountNO, double val, int transferID) throws Exception {
+    /**
+     * this method update balance of given account
+     * @param accountNO number of account
+     * @param val new value balance of account
+     * @param transferID ID of transaction
+     * @throws Exception
+     */
+    public void updateAccountData(int accountNO, double val, int transferID) throws Exception {
         if (accountNO <= 0 || val < 0 || transferID <= 0) {
             throw new IllegalArgumentException("Wrong argument data\n");
         }
@@ -162,7 +207,15 @@ public class MySQLaccess {
         }
     }
 
-    public void InsertBankTransaction(int from, int to, double amount, int fee) throws Exception {
+    /**
+     * this method insert info about transaction to the database
+     * @param from number of account from money are being transfer
+     * @param to number of account to money are being transfer
+     * @param amount amount of money to transfer
+     * @param fee fee of transaction
+     * @throws Exception
+     */
+    public void insertBankTransaction(int from, int to, double amount, int fee) throws Exception {
         if (from <= 0 || to <= 0 || amount <= 0) {
             throw new IllegalArgumentException("Wrong argument data\n");
         }
@@ -185,14 +238,14 @@ public class MySQLaccess {
                     int transactionID = resultSet.getInt(1);
                     double val = 0;
                     if (from != to && fee != 0) {
-                        val = GetAccountInfo(from);
-                        UpdateAccountData(from, val - (amount + fee), transactionID);
+                        val = getAccountInfo(from);
+                        updateAccountData(from, val - (amount + fee), transactionID);
                     }
                     if (from == to && fee == 0)
                         val = 0.0;
                     else
-                        val = GetAccountInfo(to);
-                    UpdateAccountData(to, val + amount, transactionID);
+                        val = getAccountInfo(to);
+                    updateAccountData(to, val + amount, transactionID);
                 }
             }
         } catch (Exception e) {

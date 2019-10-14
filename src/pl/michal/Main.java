@@ -67,7 +67,7 @@ public class Main {
         System.out.println("Account balance after all transactions");
         mikBank.printBankBalance();
         try {
-            mikBank.Finish();
+            mikBank.finish();
         } catch (Exception e) {
             e.printStackTrace();
         }

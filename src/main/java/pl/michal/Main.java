@@ -2,6 +2,8 @@ package pl.michal;
 
 
 import pl.michal.interfejs.BankAccount;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -14,7 +16,10 @@ public class Main {
         BankAccount[] bankAccounts;
         Random rand = new Random();
         Scanner var = new Scanner(System.in);
-        System.out.print("Enter how many account you want to generate: ");
+        final Logger logger = LoggerFactory.getLogger(Main.class);
+
+        logger.info("Enter how many account you want to generate: ");
+//        System.out.print("Enter how many account you want to generate: ");
         int noAccount;
         while (true) {
             try {
@@ -24,10 +29,12 @@ public class Main {
                 }
                 break;
             } catch (InputMismatchException e) {
-                System.out.println("You must enter a number");
+                logger.info("You must enter a number");
+//                System.out.println("You must enter a number");
                 var.next();
             } catch (IllegalArgumentException e) {
-                System.out.println(e.toString() + " \nEnter correct number");
+                logger.info(e.toString()+" \nEnter correct number");
+//                System.out.println(e.toString() + " \nEnter correct number");
             }
         }
 
@@ -37,13 +44,13 @@ public class Main {
 
         for (int i = 0; i < bankAccounts.length; i++) {
             bankAccounts[i] = new BankAccount();
-//            bankAccounts[i].deposit(rand.nextInt(10) * 10 + rand.nextInt(9));
             bankAccounts[i].depositInfo();
         }
         int from, to;
         double amount;
 
-        System.out.println("Account balance before transactions:");
+        logger.info("Account balance before transactions:");
+//        System.out.println("Account balance before transactions:");
         mikBank.printBankBalance();
 
         for (int i = 0; i < noAccount; i++) {
@@ -64,7 +71,8 @@ public class Main {
                 bankAccounts[to].depositInfo();
             }
         }
-        System.out.println("Account balance after all transactions");
+        logger.info("Account balance after all transactions");
+//        System.out.println("Account balance after all transactions");
         mikBank.printBankBalance();
         try {
             mikBank.finish();

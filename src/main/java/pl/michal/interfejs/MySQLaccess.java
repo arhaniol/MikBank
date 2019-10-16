@@ -1,5 +1,8 @@
 package pl.michal.interfejs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.sql.*;
 import java.util.Date;
@@ -10,6 +13,7 @@ public class MySQLaccess {
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
+    private static final Logger logger = LoggerFactory.getLogger(MySQLaccess.class);
 
     /**
      * default constructor
@@ -18,13 +22,13 @@ public class MySQLaccess {
         try {
             createConnection("src\\main\\resources\\db.properties");
         } catch (Exception e) {
-            System.out.println("MySQL connecting problem!\n");
+            logger.info("MySQL connecting problem!");
+//            System.out.println("MySQL connecting problem!\n");
             e.printStackTrace();
         }
     }
 
     /**
-     *
      * @param dbProperties patch to the properties file
      * @throws Exception
      */
@@ -47,11 +51,12 @@ public class MySQLaccess {
 
     /**
      * this method insert all date of client account
-     * @param accoutNO account number
+     *
+     * @param accoutNO  account number
      * @param firstName first name of account owner
-     * @param lastName last name of account owner
-     * @param city city of account owner
-     * @param eMail eMail of account owner
+     * @param lastName  last name of account owner
+     * @param city      city of account owner
+     * @param eMail     eMail of account owner
      * @throws Exception
      */
     public void insertClientData(int accoutNO, String firstName, String lastName, String city, String eMail) throws Exception {
@@ -89,9 +94,10 @@ public class MySQLaccess {
 
     /**
      * this method set balance and limit of given account
-     * @param accountNO account number
+     *
+     * @param accountNO      account number
      * @param accountBalance account balance
-     * @param accountLimit account limit
+     * @param accountLimit   account limit
      * @throws Exception
      */
     public void insertAccountData(int accountNO, double accountBalance, int accountLimit) throws Exception {
@@ -127,6 +133,7 @@ public class MySQLaccess {
 
     /**
      * this method commit transaction
+     *
      * @throws Exception
      */
     public void finishTransaction() throws Exception {
@@ -140,6 +147,7 @@ public class MySQLaccess {
 
     /**
      * this method close connection
+     *
      * @throws Exception
      */
     public void closeDB() throws Exception {
@@ -159,6 +167,7 @@ public class MySQLaccess {
 
     /**
      * this method return balance of given account
+     *
      * @param accountNO account number
      * @return balance of account
      * @throws Exception
@@ -175,7 +184,7 @@ public class MySQLaccess {
             if (resultSet.next()) {
                 return resultSet.getDouble(1);
             }
-            return - 1;
+            return -1;
         } catch (Exception e) {
             throw e;
         }
@@ -183,8 +192,9 @@ public class MySQLaccess {
 
     /**
      * this method update balance of given account
-     * @param accountNO number of account
-     * @param val new value balance of account
+     *
+     * @param accountNO  number of account
+     * @param val        new value balance of account
      * @param transferID ID of transaction
      * @throws Exception
      */
@@ -209,10 +219,11 @@ public class MySQLaccess {
 
     /**
      * this method insert info about transaction to the database
-     * @param from number of account from money are being transfer
-     * @param to number of account to money are being transfer
+     *
+     * @param from   number of account from money are being transfer
+     * @param to     number of account to money are being transfer
      * @param amount amount of money to transfer
-     * @param fee fee of transaction
+     * @param fee    fee of transaction
      * @throws Exception
      */
     public void insertBankTransaction(int from, int to, double amount, int fee) throws Exception {

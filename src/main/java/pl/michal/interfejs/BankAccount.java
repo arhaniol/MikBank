@@ -1,9 +1,12 @@
 package pl.michal.interfejs;
 
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BankAccount implements Account {
     private double accountBalance;
+    private static final Logger logger=LoggerFactory.getLogger(BankAccount.class);
 
     /**
      *
@@ -80,7 +83,8 @@ public class BankAccount implements Account {
             mySQLaccess.insertBankTransaction(accountNO, accountNO, accountBalance, 0);
             mySQLaccess.finishTransaction();
         } catch (Exception e) {
-            System.out.println(e.toString());
+            logger.info(e.toString());
+//            System.out.println(e.toString());
         }
     }
 
@@ -107,9 +111,11 @@ public class BankAccount implements Account {
     @Override
     public void depositInfo() {
         try {
-            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
+            logger.info(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
+//            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
         } catch (Exception e) {
-            System.out.println("Problem to get Deposit Info\n");
+            logger.info("Problem to get Deposit Info");
+//            System.out.println("Problem to get Deposit Info\n");
         }
     }
 

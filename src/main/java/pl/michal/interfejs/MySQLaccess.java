@@ -16,7 +16,7 @@ public class MySQLaccess {
      */
     public MySQLaccess() {
         try {
-            createConnection("db.properties");
+            createConnection("src\\main\\resources\\db.properties");
         } catch (Exception e) {
             System.out.println("MySQL connecting problem!\n");
             e.printStackTrace();

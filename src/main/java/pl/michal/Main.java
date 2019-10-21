@@ -13,7 +13,6 @@ public class Main {
 
     public static void main(String[] args) {
         // write your code here
-        BankAccount[] bankAccounts;
         Random rand = new Random();
         Scanner var = new Scanner(System.in);
         final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -33,14 +32,19 @@ public class Main {
 //                System.out.println("You must enter a number");
                 var.next();
             } catch (IllegalArgumentException e) {
-                logger.info(e.toString()+" \nEnter correct number");
+                logger.info(e.toString() + " \nEnter correct number");
 //                System.out.println(e.toString() + " \nEnter correct number");
             }
         }
 
+        BankAccount[] bankAccounts;
         bankAccounts = new BankAccount[noAccount];
 
         Bank mikBank = new Bank();
+        if (!mikBank.isConnectionEstablished()) {
+            logger.info("Connection not established!\nProgram terminated!");
+            return;
+        }
 
         for (int i = 0; i < bankAccounts.length; i++) {
             bankAccounts[i] = new BankAccount();

@@ -198,7 +198,7 @@ public class MySQLaccess {
      * @param transferID ID of transaction
      * @throws Exception
      */
-    public void updateAccountData(int accountNO, double val, int transferID) throws Exception {
+    public void updateAccountData(int accountNO, double val, int transferID) /*throws Exception */{
         if (accountNO <= 0 || val < 0 || transferID <= 0) {
             throw new IllegalArgumentException("Wrong argument data\n");
         }
@@ -213,7 +213,7 @@ public class MySQLaccess {
             preparedStatement.setInt(3, accountNO);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw e;
+            logger.info(e.toString());
         }
     }
 
@@ -261,6 +261,18 @@ public class MySQLaccess {
             }
         } catch (Exception e) {
             throw e;
+        }
+    }
+
+    /**
+     *
+     * @return true if connection was established, false otherwise
+     */
+    public boolean isConnectionEstablished(){
+        if(connection!=null){
+            return true;
+        }else {
+            return false;
         }
     }
 }

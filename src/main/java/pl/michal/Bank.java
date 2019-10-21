@@ -12,6 +12,7 @@ public class Bank implements BankTransfer {
     private final int FEE;
     private MySQLaccess mySQLaccess;
     private static final Logger logger = LoggerFactory.getLogger(Bank.class);
+    private boolean connectionEstablished = false;
 
     /**
      * Creating the BANK
@@ -20,6 +21,7 @@ public class Bank implements BankTransfer {
         account = 0;
         FEE = 1;
         mySQLaccess = new MySQLaccess();
+        connectionEstablished = mySQLaccess.isConnectionEstablished();
     }
 
     /**
@@ -83,5 +85,9 @@ public class Bank implements BankTransfer {
      */
     public void finish() throws Exception {
         mySQLaccess.closeDB();
+    }
+
+    public boolean isConnectionEstablished() {
+        return connectionEstablished;
     }
 }

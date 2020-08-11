@@ -2,11 +2,14 @@ package pl.michal.interfejs;
 
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class BankAccount implements Account {
     private double accountBalance;
+    private static final Logger logger = LoggerFactory.getLogger(BankAccount.class);
 
     /**
-     *
      * @return number of account
      */
     public int getAccountNO() {
@@ -20,6 +23,7 @@ public class BankAccount implements Account {
 
     /**
      * Function add amount of money to current account
+     *
      * @param amount of money (int)
      */
     @Override
@@ -32,6 +36,7 @@ public class BankAccount implements Account {
 
     /**
      * Function subtract amount of money from current account
+     *
      * @param amount of money
      */
     @Override
@@ -47,6 +52,7 @@ public class BankAccount implements Account {
 
     /**
      * Function subtract amount of money from current account
+     *
      * @param amount money
      * @throws Exception
      */
@@ -69,23 +75,28 @@ public class BankAccount implements Account {
     public BankAccount() {
         generateAccountNO();
 
-        accountBalance = rand.nextDouble() * 100;
-        String name = String.format("%c", rand.nextInt(24) + 65);
-        String lastName = String.format("%c", rand.nextInt(24) + 65);
-        String eMail = String.format("%s.%s@com.pl", name, lastName);
-        String city = String.format("%S%s%S%s%s%s", name, name, name, lastName, lastName, lastName);
         try {
-            mySQLaccess.insertClientData(accountNO, name, lastName, city, eMail);
-            mySQLaccess.insertAccountData(accountNO, accountBalance, 10);
-            mySQLaccess.insertBankTransaction(accountNO, accountNO, accountBalance, 0);
-            mySQLaccess.finishTransaction();
+            accountBalance = mySQLaccess.getAccountInfo(accountNO);
+            if (accountBalance < 0) {
+                accountBalance = rand.nextDouble() * 100;
+                String name = String.format("%c", rand.nextInt(24) + 65);
+                String lastName = String.format("%c", rand.nextInt(24) + 65);
+                String eMail = String.format("%s.%s@com.pl", name, lastName);
+                String city = String.format("%S%s%S%s%s%s", name, name, name, lastName, lastName, lastName);
+                mySQLaccess.insertClientData(accountNO, name, lastName, city, eMail);
+                mySQLaccess.insertAccountData(accountNO, accountBalance, 10);
+                mySQLaccess.insertBankTransaction(accountNO, accountNO, accountBalance, 0);
+                mySQLaccess.finishTransaction();
+            }
         } catch (Exception e) {
-            System.out.println(e.toString());
+            logger.info(e.toString());
+//            System.out.println(e.toString());
         }
     }
 
     /**
-     *  Creating new bank account with initial deposit value
+     * Creating new bank account with initial deposit value
+     *
      * @param amount
      */
     public BankAccount(int amount) {
@@ -94,11 +105,10 @@ public class BankAccount implements Account {
     }
 
     /**
-     *  Generating account number
+     * Generating account number
      */
     private void generateAccountNO() {
-//        accountNO = String.format("0000 %d", orderNO++);
-        accountNO = orderNO++;
+        accountNO = rand.nextInt(orderNO++) + 1;
     }
 
     /**
@@ -107,14 +117,17 @@ public class BankAccount implements Account {
     @Override
     public void depositInfo() {
         try {
-            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
+            logger.info(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
+//            System.out.println(String.format("There is %.2f zł on account %s", mySQLaccess.getAccountInfo(accountNO), accountNO));
         } catch (Exception e) {
-            System.out.println("Problem to get Deposit Info\n");
+            logger.info("Problem to get Deposit Info");
+//            System.out.println("Problem to get Deposit Info\n");
         }
     }
 
     /**
      * Closing data base connections
+     *
      * @throws Exception
      */
     public void Finish() throws Exception {

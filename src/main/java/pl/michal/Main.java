@@ -15,9 +15,9 @@ public class Main {
         // write your code here
         Random rand = new Random();
         Scanner var = new Scanner(System.in);
-        final Logger logger = LoggerFactory.getLogger(Main.class);
+        final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-        logger.info("Enter how many account you want to generate: ");
+        LOGGER.info("Enter how many account you want to generate: ");
 //        System.out.print("Enter how many account you want to generate: ");
         int noAccount;
         while (true) {
@@ -28,11 +28,11 @@ public class Main {
                 }
                 break;
             } catch (InputMismatchException e) {
-                logger.info("You must enter a number");
+                LOGGER.info("You must enter a number");
 //                System.out.println("You must enter a number");
                 var.next();
             } catch (IllegalArgumentException e) {
-                logger.info(e.toString() + " \nEnter correct number");
+                LOGGER.info(e.toString() + " \nEnter correct number");
 //                System.out.println(e.toString() + " \nEnter correct number");
             }
         }
@@ -42,7 +42,7 @@ public class Main {
 
         Bank mikBank = new Bank();
         if (!mikBank.isConnectionEstablished()) {
-            logger.info("Connection not established!\nProgram terminated!");
+            LOGGER.info("Connection not established!\nProgram terminated!");
             return;
         }
 
@@ -53,7 +53,7 @@ public class Main {
         int from, to;
         double amount;
 
-        logger.info("Account balance before transactions:");
+        LOGGER.info("Account balance before transactions:");
 //        System.out.println("Account balance before transactions:");
         mikBank.printBankBalance();
 
@@ -75,7 +75,7 @@ public class Main {
                 bankAccounts[to].depositInfo();
             }
         }
-        logger.info("Account balance after all transactions");
+        LOGGER.info("Account balance after all transactions");
 //        System.out.println("Account balance after all transactions");
         mikBank.printBankBalance();
         try {
